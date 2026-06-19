@@ -140,24 +140,37 @@ $currentUser = getCurrentUser();
             </a>
         </div>
 
-        <div class="col-md-5">
-            <a href="https://drive.google.com/drive/folders/1VLAN3H82VCuw-vinMy5TdcqvijonYy7w"
-               target="_blank"
-               class="menu-card">
-
-                <div class="menu-icon">
-                    <i class="bi bi-mortarboard"></i>
-                </div>
-
-                <div class="menu-title">
-                    Edukasi
-                </div>
-
-                <div class="menu-desc">
-                    Materi edukasi dan pembelajaran akreditasi
-                </div>
-            </a>
+         <div class="col-md-5">
+    <div class="menu-card">
+        <div class="menu-icon">
+            <i class="bi bi-mortarboard"></i>
         </div>
+
+        <div class="menu-title">
+            Edukasi
+        </div>
+
+        <div class="menu-desc">
+            Materi edukasi dan pembelajaran akreditasi
+        </div>
+
+        <hr>
+
+        <div class="row">
+            <div class="col-6">
+                <a href="pdf/Materi-Edukasi-Kolaboratif-2026.pdf" target="_blank" class="btn btn-primary w-100">
+                PDF Edukasi 1
+            </a>
+            </div>
+
+           <div class="col-6">
+             <a href="pdf/Materi-Edukasi-2026.pdf" target="_blank" class="btn btn-primary w-100">
+                PDF Edukasi 2
+            </a>
+           </div>
+        </div>
+    </div>
+</div>
 
     </div>
 
