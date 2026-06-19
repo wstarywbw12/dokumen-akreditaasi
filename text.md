@@ -4,3 +4,5 @@ git add cookies/user_1.cookie
 git commit -m "Resolve cookie conflict"
 
 git pull origin main
+
+systemctl restart php8.2-fpm
