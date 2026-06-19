@@ -746,7 +746,7 @@ $totalDocuments = count($documents);
                     </div>
                     <div>
                         <h1 class="header-title">Dokumen Akreditasi</h1>
-                        <p class="header-subtitle">Cari dan filter dokumen secara real-time</p>
+                        <p class="header-subtitle">Cari dan filter dokumen akreditasi</p>
                     </div>
                 </div>
             </div>
