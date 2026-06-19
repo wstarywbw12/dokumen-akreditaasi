@@ -5,3 +5,9 @@ config/survei.php
 
 # VS Code
 .vscode/
+
+# Cookie files
+cookies/*.cookie
+
+# Atau abaikan seluruh folder cookies
+cookies/
