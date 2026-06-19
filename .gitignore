@@ -1,0 +1,5 @@
+# File konfigurasi database
+config/database.php
+
+# VS Code
+.vscode/
