@@ -107,7 +107,7 @@ $currentUser = getCurrentUser();
             <div>
                 <h2 class="mb-1">
                     <i class="bi bi-speedometer2"></i>
-                    Dashboard Akreditasi
+                    Dashboard Akreditasi 2026 RSUD Jombang
                 </h2>
                 <div class="text-secondary">
                     Selamat datang,
