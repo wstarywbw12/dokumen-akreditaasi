@@ -1,5 +1,7 @@
 # File konfigurasi database
 config/database.php
+config/survei.php
+
 
 # VS Code
 .vscode/
