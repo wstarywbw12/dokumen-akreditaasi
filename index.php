@@ -43,6 +43,9 @@ $babStmt->execute();
 $babList = $babStmt->fetchAll();
 
 $currentUser = getCurrentUser();
+
+// Get total documents count
+$totalDocuments = count($documents);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -73,6 +76,7 @@ $currentUser = getCurrentUser();
             --border-color: #2a3a4a;
             --shadow-color: rgba(13, 148, 136, 0.1);
             --skeleton-bg: #1a2332;
+            --modal-bg: #0a0e1a;
         }
 
         * {
@@ -193,6 +197,28 @@ $currentUser = getCurrentUser();
             transform: translateY(-1px);
         }
 
+        /* Stats Badge Clickable */
+        .stats-badge {
+            background: rgba(13, 148, 136, 0.15);
+            color: var(--accent-teal-light);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stats-badge:hover {
+            background: rgba(13, 148, 136, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(13, 148, 136, 0.2);
+        }
+
         /* Filter Section */
         .filter-section {
             background: var(--bg-secondary);
@@ -288,21 +314,6 @@ $currentUser = getCurrentUser();
             background: rgba(220, 53, 69, 0.25);
             color: #ff6b6b;
             border-color: rgba(220, 53, 69, 0.5);
-        }
-
-        /* Stats Badge */
-        .stats-badge {
-            background: rgba(13, 148, 136, 0.15);
-            color: var(--accent-teal-light);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
-            border: 1px solid rgba(13, 148, 136, 0.2);
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
         }
 
         /* Document Grid */
@@ -507,6 +518,144 @@ $currentUser = getCurrentUser();
             100% { transform: rotate(360deg); }
         }
 
+        /* Modal Styles */
+        .modal-content {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color);
+            padding: 20px 25px;
+        }
+
+        .modal-header .modal-title {
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent-teal-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .modal-header .btn-close {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-color);
+            padding: 15px 25px;
+        }
+
+        /* BAB Cards in Modal */
+        .bab-stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .bab-stat-card:hover {
+            border-color: var(--accent-teal);
+            transform: translateY(-2px);
+        }
+
+        .bab-stat-card .bab-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .bab-stat-card .bab-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .bab-stat-card .bab-progress {
+            margin-bottom: 8px;
+        }
+
+        .bab-stat-card .bab-progress .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .bab-stat-card .bab-progress .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent-teal-light);
+        }
+
+        .bab-stat-card .bab-score {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .bab-stat-card .bab-score .label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+
+        .progress {
+            height: 8px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-teal-light));
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .bab-summary {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .bab-summary .summary-item {
+            text-align: center;
+        }
+
+        .bab-summary .summary-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent-teal-light);
+        }
+
+        .bab-summary .summary-item .label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Progress bar color based on value */
+        .progress-bar.progress-high {
+            background: linear-gradient(90deg, #10b981, #34d399);
+        }
+
+        .progress-bar.progress-mid {
+            background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        }
+
+        .progress-bar.progress-low {
+            background: linear-gradient(90deg, #ef4444, #f87171);
+        }
+
         @media (max-width: 768px) {
             .header-section {
                 padding: 20px;
@@ -533,6 +682,10 @@ $currentUser = getCurrentUser();
                 text-align: left;
                 width: 100%;
             }
+
+            .bab-summary .summary-item {
+                margin-bottom: 15px;
+            }
         }
 
         @media (max-width: 576px) {
@@ -554,6 +707,10 @@ $currentUser = getCurrentUser();
 
             .header-section {
                 padding: 16px;
+            }
+
+            .bab-stat-card {
+                padding: 15px;
             }
         }
 
@@ -595,9 +752,10 @@ $currentUser = getCurrentUser();
             </div>
             <div class="col-md-6">
                 <div class="d-flex align-items-center justify-content-md-end gap-3 flex-wrap">
-                    <span class="stats-badge" id="statsBadge">
+                    <span class="stats-badge" id="statsBadge" data-bs-toggle="modal" data-bs-target="#babModal">
                         <i class="bi bi-file-earmark-text"></i>
-                        <span id="totalDocuments"><?= count($documents) ?></span> Dokumen
+                        <span id="totalDocuments"><?= $totalDocuments ?></span> Dokumen
+                        <i class="bi bi-chevron-down ms-1" style="font-size: 12px;"></i>
                     </span>
                     <div class="user-menu">
                         <div class="user-info">
@@ -704,6 +862,33 @@ $currentUser = getCurrentUser();
         <div class="search-loading" id="searchLoading">
             <div class="spinner"></div>
             <span>Mencari dokumen...</span>
+        </div>
+    </div>
+</div>
+
+<!-- Modal BAB Details -->
+<div class="modal fade" id="babModal" tabindex="-1" aria-labelledby="babModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="babModalLabel">
+                    <i class="bi bi-book me-2"></i> Ringkasan BAB Akreditasi
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="babModalBody">
+                <div class="text-center py-5">
+                    <div class="spinner-border text-teal" role="status" style="color: var(--accent-teal-light);">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-secondary">Memuat data BAB...</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary);">
+                    <i class="bi bi-x-circle me-1"></i> Tutup
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -841,6 +1026,135 @@ $(document).ready(function() {
         }, 400);
     }
 
+    // Function to load BAB data for modal
+    function loadBabData() {
+        $('#babModalBody').html(`
+            <div class="text-center py-5">
+                <div class="spinner-border text-teal" role="status" style="color: var(--accent-teal-light);">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-secondary">Memuat data BAB...</p>
+            </div>
+        `);
+
+        $.ajax({
+            url: 'api/get_bab_details.php',
+            method: 'GET',
+            dataType: 'json',
+            success: function(response) {
+                if (response.success && response.data.length > 0) {
+                    renderBabModal(response);
+                } else {
+                    $('#babModalBody').html(`
+                        <div class="text-center py-5">
+                            <i class="bi bi-inbox" style="font-size: 48px; color: var(--text-secondary); opacity: 0.3;"></i>
+                            <p class="mt-3 text-secondary">Belum ada data BAB</p>
+                        </div>
+                    `);
+                }
+            },
+            error: function() {
+                $('#babModalBody').html(`
+                    <div class="text-center py-5">
+                        <i class="bi bi-exclamation-triangle" style="font-size: 48px; color: #ff6b6b;"></i>
+                        <p class="mt-3 text-secondary">Gagal memuat data. Silakan coba lagi.</p>
+                    </div>
+                `);
+            }
+        });
+    }
+
+    // Function to render BAB modal
+    function renderBabModal(response) {
+        const data = response.data;
+        const summary = response.summary;
+        
+        let html = `
+            <!-- Summary -->
+            <div class="bab-summary">
+                <div class="row">
+                    <div class="col-md-3 col-6 summary-item">
+                        <div class="number">${summary.total_bab}</div>
+                        <div class="label">Total BAB</div>
+                    </div>
+                    <div class="col-md-3 col-6 summary-item">
+                        <div class="number">${summary.avg_progress}%</div>
+                        <div class="label">Rata-rata Progress</div>
+                    </div>
+                    <div class="col-md-3 col-6 summary-item">
+                        <div class="number">${summary.avg_nilai}%</div>
+                        <div class="label">Rata-rata Nilai</div>
+                    </div>
+                    <div class="col-md-3 col-6 summary-item">
+                        <div class="number">${data.reduce((acc, bab) => acc + bab.total_dokumen, 0)}</div>
+                        <div class="label">Total Dokumen</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB Cards -->
+            <div class="row g-3">
+        `;
+
+        data.forEach((bab, index) => {
+            const progressClass = bab.progress >= 80 ? 'progress-high' : (bab.progress >= 50 ? 'progress-mid' : 'progress-low');
+            const progressColor = bab.progress >= 80 ? '#10b981' : (bab.progress >= 50 ? '#f59e0b' : '#ef4444');
+            
+            html += `
+                <div class="col-md-6 col-lg-4">
+                    <div class="bab-stat-card">
+                        <div class="bab-title">${bab.judul}</div>
+                        <div class="bab-subtitle">
+                            <i class="bi bi-tag me-1"></i> Kode: ${bab.kode || '-'} 
+                            ${bab.tahun ? `| Tahun: ${bab.tahun}` : ''}
+                        </div>
+                        <div class="bab-progress">
+                            <div class="d-flex justify-content-between">
+                                <span class="label"><i class="bi bi-list-check me-1"></i> Progress Pengisian</span>
+                                <span class="value">${bab.progress}%</span>
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar ${progressClass}" 
+                                     role="progressbar" 
+                                     style="width: ${bab.progress}%; background: ${progressColor};"
+                                     aria-valuenow="${bab.progress}" 
+                                     aria-valuemin="0" 
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-6">
+                                <div class="bab-score">
+                                    <div class="label">Elemen</div>
+                                    ${bab.total_elemen}
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="bab-score">
+                                    <div class="label">Dokumen</div>
+                                    ${bab.total_dokumen || 0}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <div class="bab-score">
+                                <span class="label">SKOR BAB AKREDITASI</span>
+                                <span style="color: var(--accent-teal-light); float: right;">${bab.nilai}%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+            </div>
+        `;
+
+        $('#babModalBody').html(html);
+    }
+
     // Event listeners
     $('#searchInput').on('input', function() {
         performSearch();
@@ -855,6 +1169,11 @@ $(document).ready(function() {
         $('#babFilter').val('').trigger('change');
         performSearch();
         $('#searchInput').focus();
+    });
+
+    // Modal event - load data when opened
+    $('#babModal').on('show.bs.modal', function() {
+        loadBabData();
     });
 
     // Keyboard shortcut: Escape to clear search
