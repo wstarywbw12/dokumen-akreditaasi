@@ -15,34 +15,34 @@ $username = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
-    
+
     if (empty($username) || empty($password)) {
         $error = 'Username dan password wajib diisi';
     } else {
         try {
             $database = new Database();
             $db = $database->getConnection();
-            
+
             // Get user from database
             $query = "SELECT * FROM users WHERE username = :username";
             $stmt = $db->prepare($query);
             $stmt->bindValue(':username', $username);
             $stmt->execute();
             $user = $stmt->fetch();
-            
+
             if ($user && password_verify($password, $user['password'])) {
                 // Login successful
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['full_name'] = $user['full_name'];
                 $_SESSION['role'] = $user['role'];
-                
+
                 // Update last login
                 $updateQuery = "UPDATE users SET last_login = NOW() WHERE id = :id";
                 $updateStmt = $db->prepare($updateQuery);
                 $updateStmt->bindValue(':id', $user['id']);
                 $updateStmt->execute();
-                
+
                 // Redirect to index
                 header('Location: index.php');
                 exit();
@@ -57,6 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,9 +264,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .login-footer {
             text-align: center;
-            margin-top: 24px;
+            margin-top: 30px;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .login-footer a {
@@ -308,6 +309,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-card">
@@ -331,15 +333,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="username">Username</label>
                     <div class="input-wrapper">
                         <i class="bi bi-person input-icon"></i>
-                        <input 
-                            type="text" 
-                            id="username" 
-                            name="username" 
-                            placeholder="Masukkan username" 
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Masukkan username"
                             value="<?= htmlspecialchars($username) ?>"
                             required
-                            autofocus
-                        >
+                            autofocus>
                     </div>
                 </div>
 
@@ -347,13 +348,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="password">Password</label>
                     <div class="input-wrapper">
                         <i class="bi bi-key input-icon"></i>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            placeholder="Masukkan password" 
-                            required
-                        >
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Masukkan password"
+                            required>
                         <button type="button" class="toggle-password" id="togglePassword" aria-label="Toggle password visibility">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -367,10 +367,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="login-footer">
-                <p>Demo: username <strong>admin</strong> | password <strong>Fktl@010</strong></p>
+                <p>SIMRS @<span id="year"></span></p>
             </div>
         </div>
     </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -378,7 +382,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.getElementById('togglePassword').addEventListener('click', function() {
             const passwordInput = document.getElementById('password');
             const icon = this.querySelector('i');
-            
+
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
                 icon.className = 'bi bi-eye-slash';
@@ -389,4 +393,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
     </script>
 </body>
+
 </html>
