@@ -848,7 +848,7 @@ $totalDocuments = count($documents);
                     </div>
                     
                     <div class="doc-meta">
-                       <a href="view_document.php?id=<?= $doc['dokumen_id'] ?>" target="_blank">
+                       <a href="view_document.php?id=<?= $doc['dokumen_id'] ?>" class="doc-url" target="_blank">
                             <i class="bi bi-eye"></i> Lihat Dokumen
                             <i class="bi bi-arrow-right"></i>
                         </a>
