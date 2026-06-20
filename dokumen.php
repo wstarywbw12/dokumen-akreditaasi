@@ -779,20 +779,7 @@ $totalDocuments = count($documents);
     <!-- Filter Section -->
     <div class="filter-section">
         <div class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label class="filter-label">
-                    <i class="bi bi-search me-1"></i> Cari Dokumen
-                </label>
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    class="form-control" 
-                    placeholder="Cari judul, elemen, standart..." 
-                    autocomplete="off"
-                    style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 10px; padding: 10px 14px;"
-                >
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <label class="filter-label">
                     <i class="bi bi-book me-1"></i> Filter BAB
                 </label>
@@ -806,7 +793,20 @@ $totalDocuments = count($documents);
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-5">
+                <label class="filter-label">
+                    <i class="bi bi-search me-1"></i> Cari Dokumen
+                </label>
+                <input 
+                    type="text" 
+                    id="searchInput"
+                    class="form-control" 
+                    placeholder="Cari judul, elemen, standart..." 
+                    autocomplete="off"
+                    style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 10px; padding: 10px 14px;"
+                >
+            </div>
+            <div class="col-md-2">
                 <button id="resetFilter" class="btn-filter-reset">
                     <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Filter
                 </button>
