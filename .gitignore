@@ -12,4 +12,5 @@ cookies/*.cookie
 # Atau abaikan seluruh folder cookies
 cookies/
 
+#
 generate_hash.php
