@@ -367,7 +367,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </form>
 
             <div class="login-footer">
-                <p>SIMRS @<span id="year"></span></p>
+                <p>SIM RSUD Jombang @<span id="year"></span></p>
             </div>
         </div>
     </div>
