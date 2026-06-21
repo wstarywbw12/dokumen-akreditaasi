@@ -210,7 +210,7 @@ $currentUser = getCurrentUser();
 
                     <div class="row">
                         <div class="col-12">
-                            <a href="dokumen.php" target="_blank" class="btn btn-biru w-100">
+                            <a href="dokument.php" target="_blank" class="btn btn-biru w-100">
                                 Lihat Dokumen
                             </a>
                         </div>
