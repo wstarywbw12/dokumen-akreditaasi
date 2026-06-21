@@ -1,5 +1,5 @@
 <?php
-// view_document.php - Menggunakan tabel dokuments
+
 require_once 'config/database.php';
 require_once 'includes/session.php';
 
@@ -14,18 +14,19 @@ if (!$id) {
 }
 
 try {
+
     $database = new Database();
     $db = $database->getConnection();
 
-    // PERBAIKAN: Menggunakan tabel dokuments (bukan dokumen)
     $stmt = $db->prepare("
         SELECT id, judul, url
-        FROM dokuments
+        FROM dokumen
         WHERE id = ?
         LIMIT 1
     ");
 
     $stmt->execute([$id]);
+
     $doc = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$doc) {
@@ -59,9 +60,13 @@ try {
     $needLogin = false;
 
     if (!file_exists($cookieFile)) {
+
         $needLogin = true;
+
     } else {
+
         $cookieAge = time() - filemtime($cookieFile);
+
         if ($cookieAge > $config['cookie_lifetime']) {
             $needLogin = true;
         }
@@ -71,6 +76,7 @@ try {
      * LOGIN
      */
     if ($needLogin) {
+
         if (file_exists($cookieFile)) {
             unlink($cookieFile);
         }
@@ -104,9 +110,11 @@ try {
         }
 
         $loginHttpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         curl_close($ch);
 
         if ($loginHttpCode != 200) {
+
             throw new Exception(
                 'Login ke survei-v2 gagal. HTTP Code: ' .
                 $loginHttpCode
@@ -148,7 +156,11 @@ try {
      * Jika cookie ternyata sudah invalid,
      * login ulang sekali lalu retry.
      */
-    if ($httpCode == 302 || stripos($fileContent, 'login') !== false) {
+    if (
+        $httpCode == 302 ||
+        stripos($fileContent, 'login') !== false
+    ) {
+
         if (file_exists($cookieFile)) {
             unlink($cookieFile);
         }
@@ -196,6 +208,7 @@ try {
      * Validasi hasil
      */
     if ($httpCode != 200) {
+
         throw new Exception(
             'Gagal mengambil dokumen. HTTP Code: ' .
             $httpCode
@@ -205,7 +218,11 @@ try {
     /**
      * PDF
      */
-    if (strpos($fileContent, '%PDF') === 0 || stripos($contentType, 'pdf') !== false) {
+    if (
+        strpos($fileContent, '%PDF') === 0 ||
+        stripos($contentType, 'pdf') !== false
+    ) {
+
         header('Content-Type: application/pdf');
         header('Content-Disposition: inline; filename="' . basename(parse_url($url, PHP_URL_PATH)) . '"');
         header('Content-Length: ' . strlen($fileContent));
@@ -225,6 +242,7 @@ try {
     echo $fileContent;
 
 } catch (Exception $e) {
+
     http_response_code(500);
 
     echo '<pre>';
@@ -232,4 +250,3 @@ try {
     echo $e->getMessage();
     echo '</pre>';
 }
-?>

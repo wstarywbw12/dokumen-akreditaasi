@@ -59,6 +59,7 @@ $totalBab = count($allBabList);
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -335,18 +336,36 @@ $totalBab = count($allBabList);
             opacity: 0;
         }
 
-        .document-card:nth-child(1) { animation-delay: 0.05s; }
-        .document-card:nth-child(2) { animation-delay: 0.1s; }
-        .document-card:nth-child(3) { animation-delay: 0.15s; }
-        .document-card:nth-child(4) { animation-delay: 0.2s; }
-        .document-card:nth-child(5) { animation-delay: 0.25s; }
-        .document-card:nth-child(6) { animation-delay: 0.3s; }
+        .document-card:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .document-card:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .document-card:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .document-card:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .document-card:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .document-card:nth-child(6) {
+            animation-delay: 0.3s;
+        }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -514,8 +533,13 @@ $totalBab = count($allBabList);
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 768px) {
@@ -587,314 +611,317 @@ $totalBab = count($allBabList);
         }
     </style>
 </head>
+
 <body>
 
-<div class="main-container">
-    <!-- Header -->
-    <div class="header-section">
-        <div class="row align-items-center">
-            <div class="col-md-6">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="header-icon">
-                        <i class="bi bi-folder2-open"></i>
-                    </div>
-                    <div>
-                        <h1 class="header-title">Dokumen Akreditasi</h1>
-                        <p class="header-subtitle">Cari dan filter dokumen akreditasi per BAB</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex align-items-center justify-content-md-end gap-3 flex-wrap">
-                    <!-- Stats Badge - Tanpa Modal -->
-                    <span class="stats-badge">
-                        <i class="bi bi-file-earmark-text"></i>
-                        <span id="totalDocuments"><?= $totalDocuments ?></span> Dokumen
-                        <span style="opacity:0.5; margin-left:4px;">|</span>
-                        <span style="font-size:12px; opacity:0.7;"><?= $totalBab ?> BAB</span>
-                    </span>
-                    <div class="user-menu">
-                        <div class="user-info">
-                            <div class="user-name"><?= htmlspecialchars($currentUser['full_name'] ?? $currentUser['username']) ?></div>
-                            <div class="user-role">
-                                <i class="bi bi-shield-check"></i> <?= htmlspecialchars($currentUser['role'] ?? 'user') ?>
-                            </div>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header-section">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="header-icon">
+                            <i class="bi bi-folder2-open"></i>
                         </div>
-                        <div class="user-avatar">
-                            <i class="bi bi-person-circle"></i>
+                        <div>
+                            <h1 class="header-title">Dokumen Akreditasi</h1>
+                            <p class="header-subtitle">Cari dan filter dokumen akreditasi per BAB</p>
                         </div>
-                        <a href="logout.php" class="btn-logout">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Filter Section -->
-    <div class="filter-section">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-5">
-                <label class="filter-label">
-                    <i class="bi bi-book me-1"></i> Pilih BAB
-                </label>
-                <select id="babFilter" class="form-select">
-                    <!-- TANPA OPSI "Semua BAB" -->
-                    <?php foreach ($allBabList as $bab): ?>
-                        <option value="<?= htmlspecialchars($bab['nama_bab']) ?>" 
-                                <?= $bab['nama_bab'] == $defaultBab ? 'selected' : '' ?>>
-                            <?= htmlspecialchars($bab['nama_bab']) ?> (<?= $bab['total_dokumen'] ?>)
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="col-md-5">
-                <label class="filter-label">
-                    <i class="bi bi-search me-1"></i> Cari Dokumen
-                </label>
-                <input 
-                    type="text" 
-                    id="searchInput"
-                    class="form-control" 
-                    placeholder="Cari berdasarkan judul dokumen..." 
-                    autocomplete="off"
-                    style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 10px; padding: 10px 14px;"
-                >
-            </div>
-            <div class="col-md-2">
-                <button id="resetFilter" class="btn-filter-reset">
-                    <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Filter
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Document Grid -->
-    <div id="documentContainer">
-        <div class="document-grid" id="documentGrid">
-            <?php if (count($documents) > 0): ?>
-                <?php foreach ($documents as $doc): ?>
-                    <div class="document-card" data-id="<?= $doc['id'] ?>">
-                        <div class="doc-icon">
-                            <i class="bi bi-file-pdf"></i>
-                        </div>
-                        <h3 class="doc-title"><?= htmlspecialchars($doc['judul']) ?></h3>
-                        
-                        <?php if (!empty($doc['nama_element'])): ?>
-                            <div class="doc-elemen">
-                                <i class="bi bi-list-check me-1"></i>
-                                <?= htmlspecialchars(substr($doc['nama_element'], 0, 100)) . (strlen($doc['nama_element']) > 100 ? '...' : '') ?>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center justify-content-md-end gap-3 flex-wrap">
+                        <!-- Stats Badge - Tanpa Modal -->
+                        <span class="stats-badge">
+                            <i class="bi bi-file-earmark-text"></i>
+                            <span id="totalDocuments"><?= $totalDocuments ?></span> Dokumen
+                            <span style="opacity:0.5; margin-left:4px;">|</span>
+                            <span style="font-size:12px; opacity:0.7;"><?= $totalBab ?> BAB</span>
+                        </span>
+                        <div class="user-menu">
+                            <div class="user-info">
+                                <div class="user-name"><?= htmlspecialchars($currentUser['full_name'] ?? $currentUser['username']) ?></div>
+                                <div class="user-role">
+                                    <i class="bi bi-shield-check"></i> <?= htmlspecialchars($currentUser['role'] ?? 'user') ?>
+                                </div>
                             </div>
-                        <?php endif; ?>
-                        
-                        <?php if (!empty($doc['nama_standart'])): ?>
-                            <div class="doc-standart">
-                                <strong><i class="bi bi-tag me-1"></i> <?= htmlspecialchars($doc['nama_standart']) ?></strong>
+                            <div class="user-avatar">
+                                <i class="bi bi-person-circle"></i>
                             </div>
-                        <?php endif; ?>
-                        
-                        <div class="doc-bab">
-                            <i class="bi bi-book me-1"></i>
-                            <?= htmlspecialchars($doc['nama_bab'] ?? 'N/A') ?>
-                        </div>
-                        
-                        <div class="doc-meta">
-                            <a href="<?= htmlspecialchars($doc['url']) ?>" class="doc-url" target="_blank">
-                                <i class="bi bi-eye"></i> Lihat Dokumen
-                                <i class="bi bi-arrow-right"></i>
+                            <a href="logout.php" class="btn-logout">
+                                <i class="bi bi-box-arrow-right"></i> Logout
                             </a>
-                            <span class="doc-id">#<?= $doc['id'] ?></span>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <h4>Tidak ada dokumen</h4>
-                    <p>Silakan pilih BAB lain atau jalankan pengambilan data</p>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
-        
-        <!-- Loading Indicator -->
-        <div class="search-loading" id="searchLoading">
-            <div class="spinner"></div>
-            <span>Mencari dokumen...</span>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-5">
+                    <label class="filter-label">
+                        <i class="bi bi-book me-1"></i> Pilih BAB
+                    </label>
+                    <select id="babFilter" class="form-select">
+                        <!-- TANPA OPSI "Semua BAB" -->
+                        <?php foreach ($allBabList as $bab): ?>
+                            <option value="<?= htmlspecialchars($bab['nama_bab']) ?>"
+                                <?= $bab['nama_bab'] == $defaultBab ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($bab['nama_bab']) ?> (<?= $bab['total_dokumen'] ?>)
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="filter-label">
+                        <i class="bi bi-search me-1"></i> Cari Dokumen
+                    </label>
+                    <input
+                        type="text"
+                        id="searchInput"
+                        class="form-control"
+                        placeholder="Cari berdasarkan judul dokumen..."
+                        autocomplete="off"
+                        style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 10px; padding: 10px 14px;">
+                </div>
+                <div class="col-md-2">
+                    <button id="resetFilter" class="btn-filter-reset">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Filter
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Grid -->
+        <div id="documentContainer">
+            <div class="document-grid" id="documentGrid">
+                <?php if (count($documents) > 0): ?>
+                    <?php foreach ($documents as $doc): ?>
+                        <div class="document-card" data-id="<?= $doc['id'] ?>">
+                            <div class="doc-icon">
+                                <i class="bi bi-file-pdf"></i>
+                            </div>
+                            <h3 class="doc-title"><?= htmlspecialchars($doc['judul']) ?></h3>
+
+                            <?php if (!empty($doc['nama_element'])): ?>
+                                <div class="doc-elemen">
+                                    <i class="bi bi-list-check me-1"></i>
+                                    <?= htmlspecialchars(substr($doc['nama_element'], 0, 100)) . (strlen($doc['nama_element']) > 100 ? '...' : '') ?>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($doc['nama_standart'])): ?>
+                                <div class="doc-standart">
+                                    <strong><i class="bi bi-tag me-1"></i> <?= htmlspecialchars($doc['nama_standart']) ?></strong>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="doc-bab">
+                                <i class="bi bi-book me-1"></i>
+                                <?= htmlspecialchars($doc['nama_bab'] ?? 'N/A') ?>
+                            </div>
+
+                            <div class="doc-meta">
+                                <!-- PERBAIKAN: Menggunakan view_document.php -->
+                                <a href="view_document.php?id=<?= $doc['id'] ?>" class="doc-url" target="_blank">
+                                    <i class="bi bi-eye"></i> Lihat Dokumen
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                                <span class="doc-id">#<?= $doc['id'] ?></span>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <h4>Tidak ada dokumen</h4>
+                        <p>Silakan pilih BAB lain atau jalankan pengambilan data</p>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div class="search-loading" id="searchLoading">
+                <div class="spinner"></div>
+                <span>Mencari dokumen...</span>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- Bootstrap 5 JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Select2 JS -->
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Select2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-<script>
-$(document).ready(function() {
-    // Initialize Select2 - Bisa dipilih, tapi tanpa opsi "Semua BAB"
-    $('#babFilter').select2({
-        theme: 'bootstrap-5',
-        placeholder: 'Pilih BAB',
-        allowClear: false, // Tidak bisa clear/remove selection
-        width: '100%'
-    });
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 - Bisa dipilih, tapi tanpa opsi "Semua BAB"
+            $('#babFilter').select2({
+                theme: 'bootstrap-5',
+                placeholder: 'Pilih BAB',
+                allowClear: false, // Tidak bisa clear/remove selection
+                width: '100%'
+            });
 
-    let debounceTimer = null;
-    let currentSearch = '';
-    let currentBab = '';
+            let debounceTimer = null;
+            let currentSearch = '';
+            let currentBab = '';
 
-    // Function to highlight text
-    function highlightText(text, search) {
-        if (!search || !text) return text;
-        const regex = new RegExp('(' + search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-        return String(text).replace(regex, '<span class="highlight">$1</span>');
-    }
+            // Function to highlight text
+            function highlightText(text, search) {
+                if (!search || !text) return text;
+                const regex = new RegExp('(' + search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                return String(text).replace(regex, '<span class="highlight">$1</span>');
+            }
 
-    // Function to update documents
-    function updateDocuments(data) {
-        const grid = $('#documentGrid');
-        const stats = $('#totalDocuments');
-        
-        stats.text(data.total);
-        
-        if (data.data.length === 0) {
-            grid.html(`
-                <div class="empty-state">
-                    <i class="bi bi-inbox"></i>
-                    <h4>Tidak ada dokumen ditemukan</h4>
-                    ${data.search ? `<p>Maaf, tidak ada dokumen yang cocok dengan kata kunci "<strong>${data.search}</strong>" di BAB "<strong>${data.bab}</strong>"</p>` : `<p>Belum ada dokumen untuk BAB "<strong>${data.bab}</strong>"</p>`}
+            // Function to update documents
+            function updateDocuments(data) {
+                const grid = $('#documentGrid');
+                const stats = $('#totalDocuments');
+
+                stats.text(data.total);
+
+                if (data.data.length === 0) {
+                    grid.html(`
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h4>Tidak ada dokumen ditemukan</h4>
+                ${data.search ? `<p>Maaf, tidak ada dokumen yang cocok dengan kata kunci "<strong>${data.search}</strong>" di BAB "<strong>${data.bab}</strong>"</p>` : `<p>Belum ada dokumen untuk BAB "<strong>${data.bab}</strong>"</p>`}
+            </div>
+        `);
+                    return;
+                }
+
+                let html = '';
+                data.data.forEach((doc, index) => {
+                    const title = highlightText(doc.judul, data.search);
+                    const elemen = highlightText(doc.nama_element || '', data.search);
+                    const standart = highlightText(doc.nama_standart || '', data.search);
+                    const bab = highlightText(doc.nama_bab || '', data.search);
+
+                    html += `
+            <div class="document-card" data-id="${doc.id}" style="animation-delay: ${(index + 1) * 0.05}s">
+                <div class="doc-icon">
+                    <i class="bi bi-file-pdf"></i>
                 </div>
-            `);
-            return;
-        }
-
-        let html = '';
-        data.data.forEach((doc, index) => {
-            const title = highlightText(doc.judul, data.search);
-            const elemen = highlightText(doc.nama_element || '', data.search);
-            const standart = highlightText(doc.nama_standart || '', data.search);
-            const bab = highlightText(doc.nama_bab || '', data.search);
-            
-            html += `
-                <div class="document-card" data-id="${doc.id}" style="animation-delay: ${(index + 1) * 0.05}s">
-                    <div class="doc-icon">
-                        <i class="bi bi-file-pdf"></i>
+                <h3 class="doc-title">${title}</h3>
+                
+                ${elemen ? `
+                    <div class="doc-elemen">
+                        <i class="bi bi-list-check me-1"></i>
+                        ${elemen.length > 100 ? elemen.substring(0, 100) + '...' : elemen}
                     </div>
-                    <h3 class="doc-title">${title}</h3>
-                    
-                    ${elemen ? `
-                        <div class="doc-elemen">
-                            <i class="bi bi-list-check me-1"></i>
-                            ${elemen.length > 100 ? elemen.substring(0, 100) + '...' : elemen}
-                        </div>
-                    ` : ''}
-                    
-                    ${standart ? `
-                        <div class="doc-standart">
-                            <strong><i class="bi bi-tag me-1"></i> ${standart}</strong>
-                        </div>
-                    ` : ''}
-                    
-                    <div class="doc-bab">
-                        <i class="bi bi-book me-1"></i>
-                        ${bab || 'N/A'}
+                ` : ''}
+                
+                ${standart ? `
+                    <div class="doc-standart">
+                        <strong><i class="bi bi-tag me-1"></i> ${standart}</strong>
                     </div>
-                    
-                    <div class="doc-meta">
-                        <a href="${doc.url}" class="doc-url" target="_blank">
-                            <i class="bi bi-eye"></i> Lihat Dokumen
-                            <i class="bi bi-arrow-right"></i>
-                        </a>
-                        <span class="doc-id">#${doc.id}</span>
-                    </div>
+                ` : ''}
+                
+                <div class="doc-bab">
+                    <i class="bi bi-book me-1"></i>
+                    ${bab || 'N/A'}
                 </div>
-            `;
-        });
-        
-        grid.html(html);
-    }
+                
+                <div class="doc-meta">
+                    <!-- PERBAIKAN: Menggunakan view_document.php -->
+                    <a href="view_document.php?id=${encodeURIComponent(doc.id)}" class="doc-url" target="_blank">
+                        <i class="bi bi-eye"></i> Lihat Dokumen
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <span class="doc-id">#${doc.id}</span>
+                </div>
+            </div>
+        `;
+                });
 
-    // Function to perform search
-    function performSearch() {
-        const searchValue = $('#searchInput').val().trim();
-        const babValue = $('#babFilter').val() || '';
-        
-        currentSearch = searchValue;
-        currentBab = babValue;
-        
-        // Show loading
-        $('#searchLoading').addClass('active');
-        
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
+                grid.html(html);
+            }
 
-        debounceTimer = setTimeout(() => {
-            $.ajax({
-                url: 'api/search_dokuments.php',
-                method: 'GET',
-                data: {
-                    search: searchValue,
-                    bab: babValue
-                },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success) {
-                        updateDocuments(response);
-                    }
-                    $('#searchLoading').removeClass('active');
-                },
-                error: function() {
-                    console.error('Error fetching data');
-                    $('#searchLoading').removeClass('active');
+            // Function to perform search
+            function performSearch() {
+                const searchValue = $('#searchInput').val().trim();
+                const babValue = $('#babFilter').val() || '';
+
+                currentSearch = searchValue;
+                currentBab = babValue;
+
+                // Show loading
+                $('#searchLoading').addClass('active');
+
+                if (debounceTimer) {
+                    clearTimeout(debounceTimer);
+                }
+
+                debounceTimer = setTimeout(() => {
+                    $.ajax({
+                        url: 'api/search_dokuments.php',
+                        method: 'GET',
+                        data: {
+                            search: searchValue,
+                            bab: babValue
+                        },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.success) {
+                                updateDocuments(response);
+                            }
+                            $('#searchLoading').removeClass('active');
+                        },
+                        error: function() {
+                            console.error('Error fetching data');
+                            $('#searchLoading').removeClass('active');
+                        }
+                    });
+                }, 400);
+            }
+
+            // Event listeners
+            $('#searchInput').on('input', function() {
+                performSearch();
+            });
+
+            $('#babFilter').on('change', function() {
+                performSearch();
+            });
+
+            $('#resetFilter').on('click', function() {
+                $('#searchInput').val('');
+                // Reset ke default BAB (Akses dan Kesinambungan Pelayanan (AKP))
+                $('#babFilter').val('Akses dan Kesinambungan Pelayanan (AKP)').trigger('change');
+                performSearch();
+                $('#searchInput').focus();
+            });
+
+            // Keyboard shortcut: Escape to clear search
+            $('#searchInput').on('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    $(this).val('');
+                    performSearch();
+                    $(this).blur();
                 }
             });
-        }, 400);
-    }
 
-    // Event listeners
-    $('#searchInput').on('input', function() {
-        performSearch();
-    });
+            // Initial load animation
+            $('.document-card').each(function(index) {
+                $(this).css('animation-delay', (index + 1) * 0.05 + 's');
+            });
 
-    $('#babFilter').on('change', function() {
-        performSearch();
-    });
+            // Focus input on page load
+            $('#searchInput').focus();
 
-    $('#resetFilter').on('click', function() {
-        $('#searchInput').val('');
-        // Reset ke default BAB (Akses dan Kesinambungan Pelayanan (AKP))
-        $('#babFilter').val('Akses dan Kesinambungan Pelayanan (AKP)').trigger('change');
-        performSearch();
-        $('#searchInput').focus();
-    });
-
-    // Keyboard shortcut: Escape to clear search
-    $('#searchInput').on('keydown', function(e) {
-        if (e.key === 'Escape') {
-            $(this).val('');
-            performSearch();
-            $(this).blur();
-        }
-    });
-
-    // Initial load animation
-    $('.document-card').each(function(index) {
-        $(this).css('animation-delay', (index + 1) * 0.05 + 's');
-    });
-
-    // Focus input on page load
-    $('#searchInput').focus();
-
-    // Auto resize select2
-    $(document).on('select2:open', () => {
-        document.querySelector('.select2-container--bootstrap-5 .select2-selection--single').style.width = '100%';
-    });
-});
-</script>
+            // Auto resize select2
+            $(document).on('select2:open', () => {
+                document.querySelector('.select2-container--bootstrap-5 .select2-selection--single').style.width = '100%';
+            });
+        });
+    </script>
 
 </body>
+
 </html>
