@@ -144,7 +144,7 @@ $currentUser = getCurrentUser();
 
         <div class="row g-4 justify-content-center">
 
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="menu-card">
                      <div class="menu-icon">
                         <i class="bi bi-folder2-open"></i>
@@ -170,7 +170,7 @@ $currentUser = getCurrentUser();
                 </div>
             </div>
 
-            <div class="col-md-5">
+            <div class="col-md-6">
                 <div class="menu-card">
                     <div class="menu-icon">
                         <i class="bi bi-mortarboard"></i>
