@@ -220,25 +220,29 @@ $totalBab = count($allBabList);
             cursor: default;
         }
 
-        /* Filter Section */
+        /* Filter Section - Baris Tunggal */
         .filter-section {
             background: var(--bg-secondary);
             border-radius: 16px;
-            padding: 20px 25px;
+            padding: 16px 20px;
             margin-bottom: 30px;
             border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         .filter-section .filter-label {
             color: var(--text-secondary);
             font-size: 13px;
             font-weight: 500;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             display: block;
         }
 
         .filter-section select,
-        .filter-section input {
+        .filter-section .search-wrapper input {
             background: var(--bg-input);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
@@ -250,7 +254,7 @@ $totalBab = count($allBabList);
         }
 
         .filter-section select:focus,
-        .filter-section input:focus {
+        .filter-section .search-wrapper input:focus {
             border-color: var(--accent-teal);
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
             outline: none;
@@ -259,6 +263,83 @@ $totalBab = count($allBabList);
         .filter-section select option {
             background: var(--bg-card);
             color: var(--text-primary);
+        }
+
+        .filter-bab-wrapper {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .filter-search-wrapper {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-wrapper input {
+            width: 100%;
+            padding-right: 44px !important;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-wrapper input:focus {
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+            outline: none;
+        }
+
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .search-wrapper input {
+            padding-left: 40px !important;
+        }
+
+        /* Button Clear (X) - di dalam search box */
+        .btn-clear-search {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .btn-clear-search:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-clear-search.visible {
+            display: flex;
         }
 
         /* Select2 Custom */
@@ -297,24 +378,6 @@ $totalBab = count($allBabList);
 
         .select2-container--bootstrap-5 .select2-selection__clear {
             color: var(--text-secondary) !important;
-        }
-
-        .btn-filter-reset {
-            background: rgba(220, 53, 69, 0.15);
-            color: #ff6b6b;
-            border: 1px solid rgba(220, 53, 69, 0.3);
-            padding: 10px 20px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .btn-filter-reset:hover {
-            background: rgba(220, 53, 69, 0.25);
-            color: #ff6b6b;
-            border-color: rgba(220, 53, 69, 0.5);
         }
 
         /* Document Grid */
@@ -552,7 +615,19 @@ $totalBab = count($allBabList);
             }
 
             .filter-section {
-                padding: 16px 20px;
+                padding: 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-bab-wrapper {
+                flex: 1 1 auto;
+                min-width: unset;
+            }
+
+            .filter-search-wrapper {
+                flex: 1 1 auto;
+                min-width: unset;
             }
 
             .document-grid {
@@ -657,38 +732,38 @@ $totalBab = count($allBabList);
             </div>
         </div>
 
-        <!-- Filter Section -->
+        <!-- Filter Section - Baris Tunggal -->
         <div class="filter-section">
-            <div class="row g-3 align-items-end">
-                <div class="col-md-5">
-                    <label class="filter-label">
-                        <i class="bi bi-book me-1"></i> Pilih BAB
-                    </label>
-                    <select id="babFilter" class="form-select">
-                        <!-- TANPA OPSI "Semua BAB" -->
-                        <?php foreach ($allBabList as $bab): ?>
-                            <option value="<?= htmlspecialchars($bab['nama_bab']) ?>"
-                                <?= $bab['nama_bab'] == $defaultBab ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($bab['nama_bab']) ?> (<?= $bab['total_dokumen'] ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-5">
-                    <label class="filter-label">
-                        <i class="bi bi-search me-1"></i> Cari Dokumen
-                    </label>
+            <!-- Filter BAB -->
+            <div class="filter-bab-wrapper">
+                <label class="filter-label">
+                    <i class="bi bi-book me-1"></i> Filter BAB
+                </label>
+                <select id="babFilter" class="form-select">
+                    <?php foreach ($allBabList as $bab): ?>
+                        <option value="<?= htmlspecialchars($bab['nama_bab']) ?>"
+                            <?= $bab['nama_bab'] == $defaultBab ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($bab['nama_bab']) ?> (<?= $bab['total_dokumen'] ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Cari Dokumen dengan tombol X -->
+            <div class="filter-search-wrapper">
+                <label class="filter-label">
+                    <i class="bi bi-search me-1"></i> Cari Dokumen
+                </label>
+                <div class="search-wrapper">
+                    <i class="bi bi-search search-icon"></i>
                     <input
                         type="text"
                         id="searchInput"
                         class="form-control"
                         placeholder="Cari berdasarkan judul dokumen..."
-                        autocomplete="off"
-                        style="background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-primary); border-radius: 10px; padding: 10px 14px;">
-                </div>
-                <div class="col-md-2">
-                    <button id="resetFilter" class="btn-filter-reset">
-                        <i class="bi bi-arrow-counterclockwise me-2"></i> Reset Filter
+                        autocomplete="off">
+                    <button id="clearSearchBtn" class="btn-clear-search" title="Hapus pencarian">
+                        <i class="bi bi-x-circle-fill"></i>
                     </button>
                 </div>
             </div>
@@ -724,7 +799,6 @@ $totalBab = count($allBabList);
                             </div>
 
                             <div class="doc-meta">
-                                <!-- PERBAIKAN: Menggunakan view_document.php -->
                                 <a href="view_document.php?id=<?= $doc['id'] ?>" class="doc-url" target="_blank">
                                     <i class="bi bi-eye"></i> Lihat Dokumen
                                     <i class="bi bi-arrow-right"></i>
@@ -759,11 +833,11 @@ $totalBab = count($allBabList);
 
     <script>
         $(document).ready(function() {
-            // Initialize Select2 - Bisa dipilih, tapi tanpa opsi "Semua BAB"
+            // Initialize Select2
             $('#babFilter').select2({
                 theme: 'bootstrap-5',
                 placeholder: 'Pilih BAB',
-                allowClear: false, // Tidak bisa clear/remove selection
+                allowClear: false,
                 width: '100%'
             });
 
@@ -778,6 +852,16 @@ $totalBab = count($allBabList);
                 return String(text).replace(regex, '<span class="highlight">$1</span>');
             }
 
+            // Function to toggle clear button visibility
+            function toggleClearButton() {
+                const searchVal = $('#searchInput').val();
+                if (searchVal && searchVal.trim().length > 0) {
+                    $('#clearSearchBtn').addClass('visible');
+                } else {
+                    $('#clearSearchBtn').removeClass('visible');
+                }
+            }
+
             // Function to update documents
             function updateDocuments(data) {
                 const grid = $('#documentGrid');
@@ -787,12 +871,12 @@ $totalBab = count($allBabList);
 
                 if (data.data.length === 0) {
                     grid.html(`
-            <div class="empty-state">
-                <i class="bi bi-inbox"></i>
-                <h4>Tidak ada dokumen ditemukan</h4>
-                ${data.search ? `<p>Maaf, tidak ada dokumen yang cocok dengan kata kunci "<strong>${data.search}</strong>" di BAB "<strong>${data.bab}</strong>"</p>` : `<p>Belum ada dokumen untuk BAB "<strong>${data.bab}</strong>"</p>`}
-            </div>
-        `);
+                        <div class="empty-state">
+                            <i class="bi bi-inbox"></i>
+                            <h4>Tidak ada dokumen ditemukan</h4>
+                            ${data.search ? `<p>Maaf, tidak ada dokumen yang cocok dengan kata kunci "<strong>${data.search}</strong>" di BAB "<strong>${data.bab}</strong>"</p>` : `<p>Belum ada dokumen untuk BAB "<strong>${data.bab}</strong>"</p>`}
+                        </div>
+                    `);
                     return;
                 }
 
@@ -804,40 +888,39 @@ $totalBab = count($allBabList);
                     const bab = highlightText(doc.nama_bab || '', data.search);
 
                     html += `
-            <div class="document-card" data-id="${doc.id}" style="animation-delay: ${(index + 1) * 0.05}s">
-                <div class="doc-icon">
-                    <i class="bi bi-file-pdf"></i>
-                </div>
-                <h3 class="doc-title">${title}</h3>
-                
-                ${elemen ? `
-                    <div class="doc-elemen">
-                        <i class="bi bi-list-check me-1"></i>
-                        ${elemen.length > 100 ? elemen.substring(0, 100) + '...' : elemen}
-                    </div>
-                ` : ''}
-                
-                ${standart ? `
-                    <div class="doc-standart">
-                        <strong><i class="bi bi-tag me-1"></i> ${standart}</strong>
-                    </div>
-                ` : ''}
-                
-                <div class="doc-bab">
-                    <i class="bi bi-book me-1"></i>
-                    ${bab || 'N/A'}
-                </div>
-                
-                <div class="doc-meta">
-                    <!-- PERBAIKAN: Menggunakan view_document.php -->
-                    <a href="view_document.php?id=${encodeURIComponent(doc.id)}" class="doc-url" target="_blank">
-                        <i class="bi bi-eye"></i> Lihat Dokumen
-                        <i class="bi bi-arrow-right"></i>
-                    </a>
-                    <span class="doc-id">#${doc.id}</span>
-                </div>
-            </div>
-        `;
+                        <div class="document-card" data-id="${doc.id}" style="animation-delay: ${(index + 1) * 0.05}s">
+                            <div class="doc-icon">
+                                <i class="bi bi-file-pdf"></i>
+                            </div>
+                            <h3 class="doc-title">${title}</h3>
+                            
+                            ${elemen ? `
+                                <div class="doc-elemen">
+                                    <i class="bi bi-list-check me-1"></i>
+                                    ${elemen.length > 100 ? elemen.substring(0, 100) + '...' : elemen}
+                                </div>
+                            ` : ''}
+                            
+                            ${standart ? `
+                                <div class="doc-standart">
+                                    <strong><i class="bi bi-tag me-1"></i> ${standart}</strong>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="doc-bab">
+                                <i class="bi bi-book me-1"></i>
+                                ${bab || 'N/A'}
+                            </div>
+                            
+                            <div class="doc-meta">
+                                <a href="view_document.php?id=${encodeURIComponent(doc.id)}" class="doc-url" target="_blank">
+                                    <i class="bi bi-eye"></i> Lihat Dokumen
+                                    <i class="bi bi-arrow-right"></i>
+                                </a>
+                                <span class="doc-id">#${doc.id}</span>
+                            </div>
+                        </div>
+                    `;
                 });
 
                 grid.html(html);
@@ -850,6 +933,9 @@ $totalBab = count($allBabList);
 
                 currentSearch = searchValue;
                 currentBab = babValue;
+
+                // Toggle clear button
+                toggleClearButton();
 
                 // Show loading
                 $('#searchLoading').addClass('active');
@@ -886,22 +972,23 @@ $totalBab = count($allBabList);
                 performSearch();
             });
 
-            $('#babFilter').on('change', function() {
-                performSearch();
-            });
-
-            $('#resetFilter').on('click', function() {
+            // Clear search button
+            $('#clearSearchBtn').on('click', function() {
                 $('#searchInput').val('');
-                // Reset ke default BAB (Akses dan Kesinambungan Pelayanan (AKP))
-                $('#babFilter').val('Akses dan Kesinambungan Pelayanan (AKP)').trigger('change');
+                toggleClearButton();
                 performSearch();
                 $('#searchInput').focus();
+            });
+
+            $('#babFilter').on('change', function() {
+                performSearch();
             });
 
             // Keyboard shortcut: Escape to clear search
             $('#searchInput').on('keydown', function(e) {
                 if (e.key === 'Escape') {
                     $(this).val('');
+                    toggleClearButton();
                     performSearch();
                     $(this).blur();
                 }
@@ -915,10 +1002,8 @@ $totalBab = count($allBabList);
             // Focus input on page load
             $('#searchInput').focus();
 
-            // Auto resize select2
-            $(document).on('select2:open', () => {
-                document.querySelector('.select2-container--bootstrap-5 .select2-selection--single').style.width = '100%';
-            });
+            // Initial check for clear button
+            toggleClearButton();
         });
     </script>
 
