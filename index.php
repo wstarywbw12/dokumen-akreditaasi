@@ -237,13 +237,13 @@ $currentUser = getCurrentUser();
                     <div class="row">
                         <div class="col-6">
                             <a href="pdf/Materi-Edukasi-Kolaboratif-2026.pdf" target="_blank" class="btn btn-biru w-100">
-                                PDF Edukasi 1
+                                Materi Edukasi Kolaboratif
                             </a>
                         </div>
 
                         <div class="col-6">
                             <a href="pdf/Materi-Edukasi-2026.pdf" target="_blank" class="btn btn-biru w-100">
-                                PDF Edukasi 2
+                                Materi Edukasi 2026
                             </a>
                         </div>
                     </div>
