@@ -591,6 +591,40 @@ $totalBab = count($allBabList);
             animation: spin 0.8s linear infinite;
         }
 
+        .doc-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.doc-elemen {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+
+    background: rgba(13, 148, 136, 0.05);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-teal);
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.highlight {
+    background: rgba(13, 148, 136, 0.35);
+    color: #2dd4bf;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -781,7 +815,7 @@ $totalBab = count($allBabList);
                             <?php if (!empty($doc['nama_element'])): ?>
                                 <div class="doc-elemen">
                                     <i class="bi bi-list-check me-1"></i>
-                                    <?= htmlspecialchars(substr($doc['nama_element'], 0, 100)) . (strlen($doc['nama_element']) > 100 ? '...' : '') ?>
+                                    <?= htmlspecialchars(substr($doc['nama_element'], 0, 90)) . (strlen($doc['nama_element']) > 90 ? '...' : '') ?>
                                 </div>
                             <?php endif; ?>
 
@@ -844,11 +878,33 @@ $totalBab = count($allBabList);
             let currentBab = '';
 
             // Function to highlight text
-            function highlightText(text, search) {
-                if (!search || !text) return text;
-                const regex = new RegExp('(' + search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
-                return String(text).replace(regex, '<span class="highlight">$1</span>');
-            }
+            function escapeHtml(text) {
+    return $('<div>').text(text).html();
+}
+
+function highlightText(text, search) {
+
+    if (!text) return '';
+
+    text = escapeHtml(text);
+
+    if (!search) return text;
+
+    const escapedSearch = search.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        '\\$&'
+    );
+
+    const regex = new RegExp(
+        '(' + escapedSearch + ')',
+        'gi'
+    );
+
+    return text.replace(
+        regex,
+        '<span class="highlight">$1</span>'
+    );
+}
 
             // Function to toggle clear button visibility
             function toggleClearButton() {
@@ -861,68 +917,120 @@ $totalBab = count($allBabList);
             }
 
             // Function to update documents
-            function updateDocuments(data) {
-                const grid = $('#documentGrid');
-                const stats = $('#totalDocuments');
+           function updateDocuments(data) {
 
-                stats.text(data.total);
+    const grid = $('#documentGrid');
+    const stats = $('#totalDocuments');
 
-                if (data.data.length === 0) {
-                    grid.html(`
-                        <div class="empty-state">
-                            <i class="bi bi-inbox"></i>
-                            <h4>Tidak ada dokumen ditemukan</h4>
-                            ${data.search ? `<p>Maaf, tidak ada dokumen yang cocok dengan kata kunci "<strong>${data.search}</strong>" di BAB "<strong>${data.bab}</strong>"</p>` : `<p>Belum ada dokumen untuk BAB "<strong>${data.bab}</strong>"</p>`}
-                        </div>
-                    `);
-                    return;
+    stats.text(data.total);
+
+    if (data.data.length === 0) {
+
+        grid.html(`
+            <div class="empty-state">
+                <i class="bi bi-inbox"></i>
+                <h4>Tidak ada dokumen ditemukan</h4>
+                ${
+                    data.search
+                    ? `<p>Tidak ada dokumen yang cocok dengan "<strong>${data.search}</strong>"</p>`
+                    : `<p>Belum ada dokumen pada BAB ini</p>`
+                }
+            </div>
+        `);
+
+        return;
+    }
+
+    let html = '';
+
+    data.data.forEach((doc, index) => {
+
+        const title = highlightText(
+            doc.judul || '',
+            data.search
+        );
+
+        const standart = highlightText(
+            doc.nama_standart || '',
+            data.search
+        );
+
+        const bab = highlightText(
+            doc.nama_bab || '',
+            data.search
+        );
+
+        const elemen = highlightText(
+            doc.nama_element || '',
+            data.search
+        );
+
+        html += `
+            <div
+                class="document-card"
+                data-id="${doc.id}"
+                style="animation-delay:${(index + 1) * 0.05}s"
+            >
+
+                <div class="doc-icon">
+                    <i class="bi bi-file-pdf"></i>
+                </div>
+
+                <h3 class="doc-title">
+                    ${title}
+                </h3>
+
+                ${
+                    elemen
+                    ? `
+                    <div class="doc-elemen">
+                        <i class="bi bi-list-check me-1"></i>
+                        ${elemen}
+                    </div>
+                    `
+                    : ''
                 }
 
-                let html = '';
-                data.data.forEach((doc, index) => {
-                    const title = highlightText(doc.judul, data.search);
-                    const elemen = highlightText(doc.nama_element || '', data.search);
-                    const standart = highlightText(doc.nama_standart || '', data.search);
-                    const bab = highlightText(doc.nama_bab || '', data.search);
+                ${
+                    standart
+                    ? `
+                    <div class="doc-standart">
+                        <strong>
+                            <i class="bi bi-tag me-1"></i>
+                            ${standart}
+                        </strong>
+                    </div>
+                    `
+                    : ''
+                }
 
-                    html += `
-                        <div class="document-card" data-id="${doc.id}" style="animation-delay: ${(index + 1) * 0.05}s">
-                            <div class="doc-icon">
-                                <i class="bi bi-file-pdf"></i>
-                            </div>
-                            <h3 class="doc-title">${title}</h3>
-                            
-                            ${elemen ? `
-                                <div class="doc-elemen">
-                                    <i class="bi bi-list-check me-1"></i>
-                                    ${elemen.length > 100 ? elemen.substring(0, 100) + '...' : elemen}
-                                </div>
-                            ` : ''}
-                            
-                            ${standart ? `
-                                <div class="doc-standart">
-                                    <strong><i class="bi bi-tag me-1"></i> ${standart}</strong>
-                                </div>
-                            ` : ''}
-                            
-                            <div class="doc-bab">
-                                <i class="bi bi-book me-1"></i>
-                                ${bab || 'N/A'}
-                            </div>
-                            
-                            <div class="doc-meta">
-                                <a href="view_document.php?id=${encodeURIComponent(doc.id)}" class="doc-url" target="_blank">
-                                    <i class="bi bi-eye"></i> Lihat Dokumen
-                                    <i class="bi bi-arrow-right"></i>
-                                </a>
-                                <span class="doc-id">#${doc.id}</span>
-                            </div>
-                        </div>
-                    `;
-                });
+                <div class="doc-bab">
+                    <i class="bi bi-book me-1"></i>
+                    ${bab}
+                </div>
 
-                grid.html(html);
-            }
+                <div class="doc-meta">
+                    <a
+                        href="view_document.php?id=${doc.id}"
+                        class="doc-url"
+                        target="_blank"
+                    >
+                        <i class="bi bi-eye"></i>
+                        Lihat Dokumen
+                        <i class="bi bi-arrow-right"></i>
+                    </a>
+
+                    <span class="doc-id">
+                        #${doc.id}
+                    </span>
+                </div>
+
+            </div>
+        `;
+    });
+
+    grid.html(html);
+}
 
             // Function to perform search
             function performSearch() {
