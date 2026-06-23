@@ -815,7 +815,7 @@ $totalBab = count($allBabList);
                             <?php if (!empty($doc['nama_element'])): ?>
                                 <div class="doc-elemen">
                                     <i class="bi bi-list-check me-1"></i>
-                                    <?= htmlspecialchars(substr($doc['nama_element'], 0, 90)) . (strlen($doc['nama_element']) > 90 ? '...' : '') ?>
+                                    <?= htmlspecialchars(substr($doc['nama_element'], 0, 83)) . (strlen($doc['nama_element']) > 83 ? '...' : '') ?>
                                 </div>
                             <?php endif; ?>
 
@@ -960,10 +960,16 @@ function highlightText(text, search) {
             data.search
         );
 
-        const elemen = highlightText(
-            doc.nama_element || '',
-            data.search
-        );
+        let elemenText = doc.nama_element || '';
+
+if (elemenText.length > 83) {
+    elemenText = elemenText.slice(0, 83) + '...';
+}
+
+const elemen = highlightText(
+    elemenText,
+    data.search
+);
 
         html += `
             <div
