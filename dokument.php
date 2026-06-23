@@ -227,10 +227,6 @@ $totalBab = count($allBabList);
             padding: 16px 20px;
             margin-bottom: 30px;
             border: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-wrap: wrap;
         }
 
         .filter-section .filter-label {
@@ -735,7 +731,8 @@ $totalBab = count($allBabList);
         <!-- Filter Section - Baris Tunggal -->
         <div class="filter-section">
             <!-- Filter BAB -->
-            <div class="filter-bab-wrapper">
+           <div class="row">
+             <div class="col-md-6 mb-3 mb-md-0">
                 <label class="filter-label">
                     <i class="bi bi-book me-1"></i> Filter BAB
                 </label>
@@ -750,7 +747,7 @@ $totalBab = count($allBabList);
             </div>
 
             <!-- Cari Dokumen dengan tombol X -->
-            <div class="filter-search-wrapper">
+            <div class="col-md-6 mb-3 mb-md-0">
                 <label class="filter-label">
                     <i class="bi bi-search me-1"></i> Cari Dokumen
                 </label>
@@ -767,6 +764,7 @@ $totalBab = count($allBabList);
                     </button>
                 </div>
             </div>
+           </div>
         </div>
 
         <!-- Document Grid -->
